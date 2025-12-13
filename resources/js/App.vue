@@ -1,4 +1,6 @@
 <script setup>
+//цепляем глобальное состояние авторизации из Pinia
+//цепляем роутер
 import { useAuthStore } from './store/auth.js';
 import { useRouter } from 'vue-router';
 
