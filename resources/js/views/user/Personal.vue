@@ -4,8 +4,16 @@ export default {
 
   data() {
     return {
-
+      title: "",
+      content: "",
     }
+  },
+
+  methods: {
+    selectFile() {
+      this.fileInput = this.$refs.file;
+      this.fileInput.click();
+    },
   },
 }
 </script>
@@ -30,8 +38,16 @@ export default {
     </div>
 
     <div>
+      <label for="content" class="block text-sm/6 font-medium text-gray-900">Upload Image</label>
+      <div class="mt-2">
+        <input ref="file" type="file" class="hidden">
+        <a href="#" @click.prevent="selectFile()" class="flex w-full justify-center bg-gradient-to-r from-sky-400 via-sky-500 to-sky-600 text-white rounded-md hover:bg-gradient-to-bl px-3 py-1.5 focus:ring-2 focus:outline-none focus:ring-sky-500 text-sm/6 font-semibold shadow-xs focus-visible:outline-2">Image</a>
+      </div>
+    </div>
+
+    <div>
       <button type="button"
-              class="flex w-full justify-center rounded-md bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-600 hover:bg-gradient-to-br focus:outline-none px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+              class="flex w-full justify-center rounded-md bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
         Publish
       </button>
     </div>
