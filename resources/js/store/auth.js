@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia'
 import axios from 'axios'
 
 axios.defaults.withCredentials = true
@@ -16,7 +16,7 @@ export const useAuthStore = defineStore('auth', {
         //checked = true нужно чтобы пришел ответ в beforeEach, иначе бесконечная загрузка
         async fetchUser() {
             try {
-                const { data } = await axios.get('/api/user');
+                const {data} = await axios.get('/api/user');
                 this.user = data;
             } catch {
                 this.user = null;
@@ -25,21 +25,21 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
-        //получаем csrf cookie, пробуем авторизоваться
+        /*
+         обнуляем ошибки
+         получаем csrf cookie, пробуем авторизоваться
+         В блоке try...catch обязательное возвращаем true или false
+         Необходимо для проверок и вывод валидационных ошибок в UI пользователю
+         если ошибка валидации то ловим данные и выводим сообщение. Иначе выкидываем ошибку.
+         */
         async login(form) {
-            //обнуляем ошибки
             this.errors = {}
 
             try {
                 await axios.get('/sanctum/csrf-cookie');
-                const { data } = await axios.post('/login', form);
+                const {data} = await axios.post('/login', form);
                 this.user = data;
-
-                //возврат true или false, необходим для проверок наличия ошибок и
-                //вывода валидационных ошибок в UI пользователю
                 return true;
-
-                //если ошибка валидации то ловим данные и выводим сообщение. Иначе выкидываем ошибку.
             } catch (error) {
                 if (error.response?.status === 422 || error.response?.status === 401) {
                     this.errors = {
@@ -47,25 +47,26 @@ export const useAuthStore = defineStore('auth', {
                     }
                     return false;
                 }
-
                 throw error;
             }
         },
 
-        //получаем куки, отправляем запрос на регистрацию
+        /*
+        получаем куки, отправляем запрос на регистрацию
+        обнуляем ошибки
+        В блоке try...catch обязательное возвращаем true или false
+        Необходимо для проверок и вывод валидационных ошибок в UI пользователю
+        если ошибки связаны с валидацией либо пользователь ввел неверные данные, то получаем их и отображаем.
+        Иначе выкинем error
+         */
         async register(form) {
-            // обнуляем ошибки
             this.errors = {};
-
             try {
                 await axios.get('/sanctum/csrf-cookie');
-                const { data } = await axios.post('/register', form);
+                const {data} = await axios.post('/register', form);
                 this.user = data;
-                //возврат true или false, необходим для проверок наличия ошибок и
-                //вывода валидационных ошибок в UI пользователю
                 return true;
             } catch (error) {
-                //если ошибки связаны с валидацией, то получаем их и отображаем. Иначе выкинем error
                 if (error.response?.status === 422) {
                     this.errors = error.response.data.errors;
                     return false;

@@ -5,20 +5,20 @@ import {useAuthStore} from '../store/auth.js';
 const routes = [
     {
         path: '/login',
-        name: 'login',
-        component: () => import('../view/user/Login.vue'),
+        name: 'user.login',
+        component: () => import('../views/user/Login.vue'),
         meta: {guest: true}
     },
     {
         path: '/register',
-        name: 'register',
-        component: () => import('../view/user/Register.vue'),
+        name: 'user.register',
+        component: () => import('../views/user/Register.vue'),
         meta: {guest: true}
     },
     {
         path: '/personal',
-        name: 'personal',
-        component: () => import('../view/user/Personal.vue'),
+        name: 'user.personal',
+        component: () => import('../views/user/Personal.vue'),
         meta: {auth: true}
     },
 ]
