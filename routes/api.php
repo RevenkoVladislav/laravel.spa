@@ -10,6 +10,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::post('/post', [PostController::class, 'store']);
-    Route::post('/post_image', [PostImageController::class, 'store']);
+    Route::post('/posts', [PostController::class, 'store']);
+    Route::post('/post_images', [PostImageController::class, 'store']);
 });

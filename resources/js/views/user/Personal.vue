@@ -12,18 +12,41 @@ export default {
   },
 
   methods: {
+    /**
+     * метод для сохранения постов
+     */
+    async store() {
+      const id = this.image ? this.image.id : null;
+        await axios.post('/api/posts', {
+          title: this.title,
+          content: this.content,
+          image_id: id,
+        }).then(response => {
+          console.log(response);
+        })
+    },
+
+    /**
+     * метод для добавления картинок через скрытый инпут и refs - file
+     */
     selectFile() {
       this.fileInput = this.$refs.file;
       this.fileInput.click();
     },
 
+    /**
+     * Временное сохранение картинок в бд
+     * добавляем image в FormData, делаем запрос через api
+     * сохраняем картинку в бд со статусом false
+     * либо выводим ошибки
+     */
     async storeImage(event) {
       try {
         const file = event.target.files[0];
         const formData = new FormData();
         formData.append('image', file);
 
-        await axios.post('/api/post_image', formData)
+        await axios.post('/api/post_images', formData)
             .then(res => {
               this.image = res.data.data;
             })
@@ -75,7 +98,7 @@ export default {
     </div>
 
     <div>
-      <button type="button"
+      <button @click.prevent="store" type="button"
               class="flex w-full justify-center rounded-md bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
         Publish
       </button>
