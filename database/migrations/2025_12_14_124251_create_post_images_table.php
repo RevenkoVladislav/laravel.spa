@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('path');
             $table->boolean('status')->default(false);
-            $table->foreignId('post_id')->nullable()->constrained('posts');
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('post_id')->nullable()->constrained('posts')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->index(['status', 'created_at']);
             $table->timestamps();
         });
     }

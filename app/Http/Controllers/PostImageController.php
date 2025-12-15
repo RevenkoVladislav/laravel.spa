@@ -14,6 +14,7 @@ class PostImageController extends Controller
         $image = PostImage::create([
             'path' => $path,
             'user_id' => auth()->id(),
+            'status' => false,
         ]);
         return PostImageResource::make($image);
     }
