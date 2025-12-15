@@ -6,6 +6,7 @@ export default {
     return {
       title: "",
       content: "",
+      image: null,
     }
   },
 
@@ -22,7 +23,7 @@ export default {
 
       await axios.post('/api/post_image', formData)
           .then(res => {
-            console.log(res)
+            this.image = res.data.data;
           })
     }
   },
@@ -49,12 +50,19 @@ export default {
     </div>
 
     <div>
-      <label for="content" class="block text-sm/6 font-medium text-gray-900">Upload Image</label>
+      <div class="flex items-center justify-between">
+        <label for="file" class="block text-sm/6 font-medium text-gray-900">Upload Image</label>
+        <a v-if="image" @click.prevent="image = null" href="#" class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-md text-xs px-3 py-1 text-center leading-5">Cancel</a>
+      </div>
       <div class="mt-2">
-        <input @change="storeImage"  ref="file" type="file" class="hidden">
+        <input @change="storeImage"  ref="file" type="file" id="file" class="hidden">
         <a href="#" @click.prevent="selectFile()"
            class="flex w-full justify-center bg-gradient-to-r from-sky-400 via-sky-500 to-sky-600 text-white rounded-md hover:bg-gradient-to-bl px-3 py-1.5 focus:ring-2 focus:outline-none focus:ring-sky-500 text-sm/6 font-semibold shadow-xs focus-visible:outline-2">Image</a>
+        <div v-if="image" class="mt-2">
+          <img :src="image.url" alt="preview">
+        </div>
       </div>
+
     </div>
 
     <div>

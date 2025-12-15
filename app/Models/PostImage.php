@@ -16,4 +16,9 @@ class PostImage extends Model
         'post_id',
         'user_id'
     ];
+
+    public function getUrlAttribute(): string
+    {
+        return url('storage/' . $this['path']);
+    }
 }
