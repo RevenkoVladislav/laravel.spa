@@ -23,7 +23,7 @@ class ClearUnusedImages extends Command
      */
     public function handle()
     {
-        $cutTime = Carbon::now()->subHour();
+        $cutTime = Carbon::now()->subMinute();
         $images = PostImage::where('status', false)
             ->where('created_at', '<', $cutTime)
             ->get();

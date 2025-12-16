@@ -31,9 +31,10 @@ class PostController extends Controller
             $post = Post::create($data);
 
             $this->imageToPost($post, $imageId);
-            PostImage::clearStorage();
 
             DB::commit();
+
+            PostImage::clearStorageForUser(auth()->id());
 
             $post->load('image');
             return PostResource::make($post);

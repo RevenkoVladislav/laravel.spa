@@ -23,9 +23,9 @@ class PostImage extends Model
         return url('storage/' . $this['path']);
     }
 
-    public static function clearStorage()
+    public static function clearStorageForUser(int $userId): void
     {
-        $images = PostImage::where('user_id', auth()->id())->where('status', false)->get();
+        $images = PostImage::where('user_id', $userId)->where('status', false)->get();
 
         foreach ($images as $image) {
             Storage::disk('public')->delete($image->path);
