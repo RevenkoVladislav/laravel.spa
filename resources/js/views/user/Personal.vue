@@ -14,16 +14,26 @@ export default {
   methods: {
     /**
      * метод для сохранения постов
+     * Оборачиваем в try..catch для формирования валидационных ошибок
+     * формируем id для картинки, которой может и не быть.
+     * Через axios передаем данные в store
+     * в случае успеха обнуляем поля
      */
     async store() {
-      const id = this.image ? this.image.id : null;
+      try {
+        const id = this.image ? this.image.id : null;
         await axios.post('/api/posts', {
           title: this.title,
           content: this.content,
           image_id: id,
         }).then(response => {
-          console.log(response);
-        })
+          this.title = '';
+          this.content = '';
+          this.image = null;
+        });
+      } catch (error) {
+        this.errors = error.response.data.errors;
+      }
     },
 
     /**
@@ -65,6 +75,9 @@ export default {
       <div class="mt-2">
         <input v-model="title" id="title" type="text" required placeholder="Title"
                class="block w-full rounded-md bg-gray-50 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
+        <p v-if="errors.title" class="text-red-500">
+          {{ errors.title[0] }}
+        </p>
       </div>
     </div>
 
@@ -74,12 +87,15 @@ export default {
         <textarea v-model="content" id="content" rows="4"
                   class="block w-full rounded-md bg-gray-50 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   placeholder="Write your content"></textarea>
+        <p v-if="errors.content" class="text-red-500">
+          {{ errors.content[0] }}
+        </p>
       </div>
     </div>
 
     <div>
       <div class="flex items-center justify-between">
-        <label for="file" class="block text-sm/6 font-medium text-gray-900">Upload Image</label>
+        <label class="block text-sm/6 font-medium text-gray-900">Upload Image</label>
         <a v-if="image" @click.prevent="image = null" href="#"
            class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-md text-xs px-3 py-1 text-center leading-5">Cancel</a>
       </div>
@@ -99,7 +115,7 @@ export default {
 
     <div>
       <button @click.prevent="store" type="button"
-              class="flex w-full justify-center rounded-md bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+              class="flex w-full justify-center rounded-md bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">
         Publish
       </button>
     </div>
