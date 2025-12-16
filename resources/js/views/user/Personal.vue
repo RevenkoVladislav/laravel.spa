@@ -98,7 +98,7 @@ export default {
     </div>
 
     <div>
-      <a href="#" @click.prevent="resetForm" v-if="title || content || image" class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-md text-xs px-3 py-1 text-center leading-5">Reset Form</a>
+      <a href="#" @click.prevent="resetForm" v-if="title || content || image" class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-md text-xs px-3 py-1 text-center leading-5">Reset Post</a>
     </div>
 
     <div>

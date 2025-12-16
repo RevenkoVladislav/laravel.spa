@@ -15,6 +15,7 @@ class PostController extends Controller
      * Отсекаем из data поле image_id т.к в таблице Post его нет
      * Создаем post передав ему data
      * Используем вспомогательный метод для привязки картинки к посту
+     * Очищаем незагурженные картинки через метод clearStorage
      * Возвращаем PostResource и для модели $post прогружаем отношение image
      */
     public function store(StoreRequest $request)
@@ -30,6 +31,7 @@ class PostController extends Controller
             $post = Post::create($data);
 
             $this->imageToPost($post, $imageId);
+            PostImage::clearStorage();
 
             DB::commit();
 
