@@ -17,9 +17,6 @@ class Post extends Model
         'user_id',
     ];
 
-    //нужно чтобы наши посты сразу подгружались с картинками с одного запроса к бд.
-    protected $with = ['image'];
-
     public function image(): HasOne
     {
         return $this->hasOne(PostImage::class, 'post_id', 'id')
