@@ -17,7 +17,7 @@ class Post extends Model
         'user_id',
     ];
 
-    //нужно чтобы наши посты сразу подгружались к посту с одного запроса к бд.
+    //нужно чтобы наши посты сразу подгружались с картинками с одного запроса к бд.
     protected $with = ['image'];
 
     public function image(): HasOne

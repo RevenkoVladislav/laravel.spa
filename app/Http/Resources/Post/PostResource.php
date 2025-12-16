@@ -17,7 +17,7 @@ class PostResource extends JsonResource
         return [
             'title' => $this->title,
             'content' => $this->content,
-            'image_url' => $this->image->url,
+            'image_url' => $this->image?->url, //защита от null error т.к пост может быть без картинки
         ];
     }
 }

@@ -42,16 +42,23 @@ class PostController extends Controller
     /**
      * Вспомогательный метод для создания постов.
      * Если к посту прикрепляли картинку, то ищем картинку в таблице PostImage
+     * Используем фильтрацию где проверяем что картинку применил данный пользователь
      * обновляем статус и post_id у картинки
      */
-    private function imageToPost($post, $imageId)
+    private function imageToPost(Post $post, ?int $imageId): void
     {
-        if (isset($imageId)) {
-            $image = PostImage::find($imageId);
-            $image->update([
-                'status' => true,
-                'post_id' => $post->id,
-            ]);
+        if (!$imageId) {
+            return;
         }
+
+        $image = PostImage::where('id', $imageId)
+            ->where('user_id', auth()->id())
+            ->where('status', false)
+            ->firstOrFail();
+
+        $image->update([
+            'status' => true,
+            'post_id' => $post->id,
+        ]);
     }
 }
