@@ -7,5 +7,5 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('images:clear-unused')->everyMinute();
+Schedule::command('images:clear-unused')->everyMinute()->withoutOverlapping();
 //чтобы увидеть сообщения напрямую нужно использовать метод wsendOutputTo(storage_path('logs/images.log'))
