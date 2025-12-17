@@ -31,6 +31,9 @@ class PostImageService
         ]);
     }
 
+    /**
+     * проводим очистку неопубликованных картинок для конкретного авторизованного пользователя
+     */
     public function clearStorageForUser(int $userId): void
     {
         $images = PostImage::where('user_id', $userId)

@@ -10,15 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
-    /**
-     * Валидируем данные, оборачиваем операцию в транзакцию
-     * Отсекаем из data поле image_id т.к в таблице Post его нет
-     * Создаем post передав ему data
-     * Используем вспомогательный метод для привязки картинки к посту
-     * Очищаем незагурженные картинки через метод clearStorage
-     * Подгружаем картинки через load т.к это уже готовая модель с данными
-     * Возвращаем PostResource и для модели $post прогружаем отношение image
-     */
     public function store(StoreRequest $request)
     {
         $data = $request->validated();
@@ -44,23 +35,5 @@ class PostController extends Controller
             DB::rollBack();
             return response()->json(['error' => $exception->getMessage()]);
         }
-    }
-
-
-    private function imageToPost(Post $post, ?int $imageId): void
-    {
-        if (!$imageId) {
-            return;
-        }
-
-        $image = PostImage::where('id', $imageId)
-            ->where('user_id', auth()->id())
-            ->where('status', false)
-            ->firstOrFail();
-
-        $image->update([
-            'status' => true,
-            'post_id' => $post->id,
-        ]);
     }
 }
