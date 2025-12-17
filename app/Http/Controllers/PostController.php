@@ -16,11 +16,13 @@ class PostController extends Controller
      * Создаем post передав ему data
      * Используем вспомогательный метод для привязки картинки к посту
      * Очищаем незагурженные картинки через метод clearStorage
+     * Подгружаем картинки через load т.к это уже готовая модель с данными
      * Возвращаем PostResource и для модели $post прогружаем отношение image
      */
     public function store(StoreRequest $request)
     {
         $data = $request->validated();
+
         try {
             DB::beginTransaction();
 
@@ -44,12 +46,7 @@ class PostController extends Controller
         }
     }
 
-    /**
-     * Вспомогательный метод для создания постов.
-     * Если к посту прикрепляли картинку, то ищем картинку в таблице PostImage
-     * Используем фильтрацию где проверяем что картинку применил данный пользователь
-     * обновляем статус и post_id у картинки
-     */
+
     private function imageToPost(Post $post, ?int $imageId): void
     {
         if (!$imageId) {
