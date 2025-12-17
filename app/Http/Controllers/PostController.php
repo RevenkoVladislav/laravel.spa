@@ -6,34 +6,35 @@ use App\Http\Requests\Post\StoreRequest;
 use App\Http\Resources\Post\PostResource;
 use App\Models\Post;
 use App\Models\PostImage;
+use App\Services\PostService;
 use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
+    /**
+     * Подключение сервиса через DI
+     */
+    public function __construct(
+        protected PostService $postService
+    ) {}
+
+    /**
+     * прокидываем в сервис валидированные данные и id авторизованного пользователя
+     * очищаем картинки
+     * подгружаем image для жадной загрузки и оптимизации запросов в бд
+     * вощвращаем PostResource
+     */
     public function store(StoreRequest $request)
     {
-        $data = $request->validated();
+        $post = $this->postService->store(
+            $request->validated(),
+            auth()->id(),
+        );
 
-        try {
-            DB::beginTransaction();
+        $this->postService->clearUnusedImages(auth()->id());
 
-            $imageId = $data['image_id'];
-            unset($data['image_id']);
+        $post->load('images');
 
-            $data['user_id'] = auth()->id();
-            $post = Post::create($data);
-
-            $this->imageToPost($post, $imageId);
-
-            DB::commit();
-
-            PostImage::clearStorageForUser(auth()->id());
-
-            $post->load('image');
-            return PostResource::make($post);
-        } catch (\Throwable $exception) {
-            DB::rollBack();
-            return response()->json(['error' => $exception->getMessage()]);
-        }
+        return PostResource::make($post);
     }
 }
