@@ -25,9 +25,9 @@ class StoreRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'image_id' => Rule::exists('post_images', 'id')
+            'image_id' => ['nullable', Rule::exists('post_images', 'id')
                 ->where(fn($query) => $query->where('user_id', auth()->id())
-                    ->where('status', false)),
+                    ->where('status', false))],
         ];
     }
 }

@@ -33,7 +33,7 @@ class PostController extends Controller
 
         $this->postService->clearUnusedImages(auth()->id());
 
-        $post->load('images');
+        $post->load('image');
 
         return PostResource::make($post);
     }
