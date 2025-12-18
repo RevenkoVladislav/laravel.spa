@@ -16,7 +16,9 @@ class PostController extends Controller
      */
     public function __construct(
         protected PostService $postService
-    ) {}
+    )
+    {
+    }
 
     /**
      * Берем все посты из БД, где автор это авторизованный пользователь
@@ -24,7 +26,10 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::where('user_id', auth()->id())->orderBy('created_at', 'desc')->get();
+        $posts = Post::with('image')
+            ->where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
+            ->get();
         return PostResource::collection($posts);
     }
 

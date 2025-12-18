@@ -27,6 +27,7 @@ php artisan schedule:work
 ### Current features
 
 - Register and Login components
+- Cookie sanctum auth
 - Ability to create posts with images.
 - Console command for manual storage cleanup and automated hourly scheduling.
 
