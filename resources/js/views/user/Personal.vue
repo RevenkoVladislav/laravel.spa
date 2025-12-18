@@ -90,7 +90,7 @@ export default {
 </script>
 
 <template>
-  <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm space-y-6">
+  <div class="mt-6 sm:mx-auto sm:w-full sm:max-w-md space-y-6">
     <div>
       <label for="title" class="block text-sm/6 font-medium text-gray-900">Title</label>
       <div class="mt-2">

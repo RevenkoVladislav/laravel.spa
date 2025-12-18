@@ -21,6 +21,12 @@ const routes = [
         component: () => import('../views/user/Personal.vue'),
         meta: {auth: true}
     },
+    {
+        path: '/index',
+        name: 'user.index',
+        component: () => import('../views/user/Index.vue'),
+        meta: {auth: true}
+    },
 ]
 
 //создаем роутер
