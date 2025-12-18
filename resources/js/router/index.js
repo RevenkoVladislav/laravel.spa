@@ -16,16 +16,22 @@ const routes = [
         meta: {guest: true}
     },
     {
-        path: '/personal',
+        path: '/users/personal',
         name: 'user.personal',
         component: () => import('../views/user/Personal.vue'),
         meta: {auth: true}
     },
     {
-        path: '/index',
+        path: '/users/index',
         name: 'user.index',
         component: () => import('../views/user/Index.vue'),
         meta: {auth: true}
+    },
+    {
+        path: '/users/:id/show',
+        name: 'user.show',
+        component: () => import('../views/user/Show.vue'),
+        meta: {auth:true},
     },
 ]
 

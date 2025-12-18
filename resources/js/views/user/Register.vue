@@ -20,7 +20,7 @@ const errors = computed(() => auth.errors);
 const submit = async () => {
     const success = await auth.register(form);
     if (success) {
-        await router.push('/personal');
+        await router.push({name: 'user.personal'});
     }
 }
 </script>

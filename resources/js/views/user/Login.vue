@@ -16,7 +16,7 @@ const errors = computed(() => auth.errors);
 const submit = async () => {
     const success = await auth.login(form);
     if (success) {
-        await router.push('/personal');
+        await router.push({name: 'user.personal'});
     }
 }
 </script>
