@@ -8,6 +8,7 @@ export default {
       content: "",
       image: null,
       errors: {},
+      posts: [],
     }
   },
 
@@ -17,6 +18,7 @@ export default {
      * Оборачиваем в try..catch для формирования валидационных ошибок
      * формируем id для картинки, которой может и не быть.
      * Через axios передаем данные в store
+     * с помощью unshift кидаем только что созданный пост в массив постов, тем самым выводим его на странице
      * в случае успеха обнуляем поля
      */
     async store() {
@@ -27,6 +29,7 @@ export default {
           content: this.content,
           image_id: id,
         }).then(response => {
+          this.posts.unshift(response.data.data);
           this.resetForm();
         });
       } catch (error) {
@@ -68,7 +71,21 @@ export default {
         this.errors = error.response.data.errors;
       }
     },
+
+    /**
+     * Получение всех постов
+     */
+    getPosts() {
+      axios.get('/api/posts')
+          .then(response => {
+            this.posts = response.data.data;
+          })
+    },
   },
+
+  mounted() {
+    this.getPosts();
+  }
 }
 </script>
 
@@ -126,6 +143,22 @@ export default {
               class="flex w-full justify-center rounded-md bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">
         Publish
       </button>
+    </div>
+
+    <div v-if="posts">
+      <h1 class="text-center font-bold text-xl mb-5 pb-3 border-b">Published Posts</h1>
+      <div class="space-y-6 max-w-4xl mx-auto mb-3">
+        <div v-for="post in posts" :key="post.id" class="bg-gray-100 hover:bg-gray-300 rounded-md p-1 border-t border-gray-300 border hover:border-gray-600">
+          <div class="p-6">
+            <h1 class="text-2xl text-center font-bold text-gray-900 mb-4 tracking-tight leading-8">{{ post.title }}</h1>
+            <div v-if="post.image_url" class="mb-6 rounded-md">
+              <img :src="post.image_url" class="w-full mx-auto border hover:border-blue-500">
+            </div>
+            <p class="text-black-600">{{ post.content }}</p>
+            <p class="mt-2 text-right text-sm text-slate-500">{{ post.date }}</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

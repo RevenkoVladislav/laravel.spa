@@ -19,6 +19,16 @@ class PostController extends Controller
     ) {}
 
     /**
+     * Берем все посты из БД, где автор это авторизованный пользователь
+     * Отдаем их в виде PostResource
+     */
+    public function index()
+    {
+        $posts = Post::where('user_id', auth()->id())->orderBy('created_at', 'desc')->get();
+        return PostResource::collection($posts);
+    }
+
+    /**
      * прокидываем в сервис валидированные данные и id авторизованного пользователя
      * очищаем картинки
      * подгружаем image для жадной загрузки и оптимизации запросов в бд

@@ -20,7 +20,6 @@ class ClearUnusedImages extends Command
      * Если нечего удалять то return
      * Удаляем их из Storage и БД
      * в случае удаления возвращаем код 0 - успех
-     *
      */
     public function handle(PostImageService $postImageService): int
     {
