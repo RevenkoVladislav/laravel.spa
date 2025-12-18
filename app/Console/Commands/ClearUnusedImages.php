@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\PostImage;
+use App\Services\PostImageService;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
@@ -21,28 +22,23 @@ class ClearUnusedImages extends Command
      * в случае удаления возвращаем код 0 - успех
      *
      */
-    public function handle()
+    public function handle(PostImageService $postImageService): int
     {
         $cutTime = Carbon::now()->subHour();
         $images = PostImage::where('status', false)
             ->where('created_at', '<', $cutTime)
             ->get();
 
+        if ($images->isEmpty()) {
+            $this->info("No images for deleted");
+            return self::SUCCESS;
+        }
+
         $count = $images->count();
 
-        if ($count > 0) {
-            $this->info("Found $count images for deleted");
-        } else {
-            $this->info("No images for deleted");
-            return 0;
-        }
-
-        foreach ($images as $image) {
-            Storage::disk('public')->delete($image->path);
-            $image->delete();
-        }
+        $postImageService->clearStorage($images);
 
         $this->info("Deleted $count images");
-        return 0;
+        return self::SUCCESS;
     }
 }

@@ -40,6 +40,14 @@ class PostImageService
             ->where('status', false)
             ->get();
 
+        $this->clearStorage($images);
+    }
+
+    /**
+     * метод по удалению картинок из бд и storage
+     */
+    public function clearStorage($images): void
+    {
         foreach ($images as $image) {
             Storage::disk('public')->delete($image->path);
             $image->delete();
