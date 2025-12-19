@@ -65,12 +65,15 @@ class UserController extends Controller
 
     /**
      * Получаем посты от пользователей на которых мы подписаны
-     * Получаем посты, только там где user_id совпадает с id подписаннных пользователей
+     * Получаем посты, только там где user_id совпадает с id подписаннных пользователей, исключаем eager loader через with
      */
     public function followingPost()
     {
         $followingIds = auth()->user()->followings()->get()->pluck('id')->toArray();
-        $posts = Post::whereIn('user_id', $followingIds)->get();
+        $posts = Post::with('image')
+            ->whereIn('user_id', $followingIds)
+            ->latest()
+            ->get();
 
         return PostResource::collection($posts);
     }
