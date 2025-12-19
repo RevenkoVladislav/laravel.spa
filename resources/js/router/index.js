@@ -28,6 +28,12 @@ const routes = [
         meta: {auth: true}
     },
     {
+        path: '/users/feed',
+        name: 'user.feed',
+        component: () => import('../views/user/Feed.vue'),
+        meta: {auth: true}
+    },
+    {
         path: '/users/:id',
         name: 'user.show',
         component: () => import('../views/user/Show.vue'),

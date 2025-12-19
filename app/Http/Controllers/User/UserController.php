@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Post\PostResource;
 use App\Http\Resources\User\UserResource;
+use App\Models\Post;
 use App\Models\SubscriberFollowing;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -60,5 +61,17 @@ class UserController extends Controller
         $response = auth()->user()->followings()->toggle($user->id);
         $data['is_following'] = count($response['attached']) > 0;
         return $data;
+    }
+
+    /**
+     * Получаем посты от пользователей на которых мы подписаны
+     * Получаем посты, только там где user_id совпадает с id подписаннных пользователей
+     */
+    public function followingPost()
+    {
+        $followingIds = auth()->user()->followings()->get()->pluck('id')->toArray();
+        $posts = Post::whereIn('user_id', $followingIds)->get();
+
+        return PostResource::collection($posts);
     }
 }
