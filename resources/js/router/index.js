@@ -28,7 +28,7 @@ const routes = [
         meta: {auth: true}
     },
     {
-        path: '/users/:id/show',
+        path: '/users/:id',
         name: 'user.show',
         component: () => import('../views/user/Show.vue'),
         meta: {auth:true},
