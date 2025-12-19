@@ -40,7 +40,8 @@ export default {
                         <div class="flex justify-between items-center">
                             <p class="mt-2 text-left text-sm text-slate-500">id: {{ user.id }}</p>
                             <p class="text-black-600 hover:text-green-600"><router-link :to="{name: 'user.show', params: {id: user.id}}">{{ user.email }}</router-link></p>
-                            <a @click.prevent="toggleFollowing(user)" href="#" class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-green-600 dark:focus:ring-green-800 font-medium rounded-md text-xs px-3 py-1 text-center leading-5">follow</a>
+                            <a v-if="user.is_following" @click.prevent="toggleFollowing(user)" href="#" class="bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-green-600 dark:focus:ring-green-800 font-medium rounded-md text-xs px-3 py-1 text-center leading-5">follow</a>
+                            <a v-if="!user.is_following" @click.prevent="toggleFollowing(user)" href="#" class="bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-red-600 dark:focus:ring-red-800 font-medium rounded-md text-xs px-3 py-1 text-center leading-5">unfollow</a>
                         </div>
                         <div class="flex mt-5 justify-between items-center">
                             <p>Likes: 1</p>
