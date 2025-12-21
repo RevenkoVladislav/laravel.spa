@@ -52,4 +52,16 @@ class PostController extends Controller
 
         return PostResource::make($post);
     }
+
+    /**
+     * Используем отношение для авторизованного пользователя
+     * привязываем и отвязываем $post
+     * возвращаем is_liked для фронта
+     */
+    public function toggleLike(Post $post)
+    {
+        $response = auth()->user()->likedPosts()->toggle($post);
+        $data['is_liked'] = count($response['attached']) > 0;
+        return $data;
+    }
 }
