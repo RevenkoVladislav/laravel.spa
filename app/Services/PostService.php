@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\LikedPost;
 use App\Models\Post;
 use Illuminate\Support\Facades\DB;
+use Ramsey\Collection\Collection;
 
 class PostService
 {
@@ -44,5 +46,28 @@ class PostService
     public function clearUnusedImages(int $userId): void
     {
         $this->postImageService->clearStorageForUser($userId);
+    }
+
+    /**
+     * Получаем все пролайканный посты для авторизованного пользователя
+     * Берем значения post_id и делаем массив из этих значений
+     *
+     * Проходимся по постам в цикле
+     * если id поста совпадает с id пролайканных постов то выставляем is_liked = true
+     * возвращаем все измененные посты
+     */
+    public function likedPosts($posts, $authUser)
+    {
+        $likedPostIds = LikedPost::where('user_id', $authUser)
+            ->get('post_id')
+            ->pluck('post_id')
+            ->toArray();
+
+        foreach ($posts as $post) {
+            if (in_array($post->id, $likedPostIds)) {
+                $post->is_liked = true;
+            }
+        }
+        return $posts;
     }
 }

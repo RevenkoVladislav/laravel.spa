@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Post\StoreRequest;
 use App\Http\Resources\Post\PostResource;
+use App\Models\LikedPost;
 use App\Models\Post;
 use App\Models\PostImage;
 use App\Services\PostService;
@@ -22,6 +23,8 @@ class PostController extends Controller
 
     /**
      * Берем все посты из БД, где автор это авторизованный пользователь
+     * Обращаемся к сервису, в который передаем все посты, и id авторизованного пользователя
+     * Получаем posts которые имеют лайки
      * Отдаем их в виде PostResource
      */
     public function index()
@@ -30,6 +33,9 @@ class PostController extends Controller
             ->where('user_id', auth()->id())
             ->orderBy('created_at', 'desc')
             ->get();
+
+        $posts = $this->postService->likedPosts($posts, auth()->id());
+
         return PostResource::collection($posts);
     }
 
