@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Post\PostResource;
 use App\Http\Resources\User\UserResource;
+use App\Models\LikedPost;
 use App\Models\Post;
 use App\Models\SubscriberFollowing;
 use App\Models\User;
@@ -63,19 +64,27 @@ class UserController extends Controller
 
     /**
      * Получаем посты от пользователей на которых мы подписаны
-     * Получаем посты, только там где user_id совпадает с id подписаннных пользователей, исключаем eager loader через with
-     * Получаем лайки на постах через сервис
+     * Реализуем механику - после лайка, пост больше не отображается в Feed странице
+     * Получаем id постов с лайком от пользователя
+     * Получаем посты, только там где user_id совпадает с id подписаннных пользователей,
+     * И НЕ совпадают с пролайканными постами
+     * исключаем eager loader через with
      */
     public function followingPost()
     {
         $followingIds = auth()->user()->followings()->get()->pluck('id')->toArray();
+
+        $likedPostIds = LikedPost::where('user_id', auth()->id())
+            ->get('post_id')
+            ->pluck('post_id')
+            ->toArray();
+
         $posts = Post::with('image')
             ->withCount('likedUsers')
             ->whereIn('user_id', $followingIds)
+            ->whereNotIn('id', $likedPostIds)
             ->latest()
             ->get();
-
-        $posts = $this->userService->markLikedPosts($posts, auth()->id());
 
         return PostResource::collection($posts);
     }
