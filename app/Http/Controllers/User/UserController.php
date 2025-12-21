@@ -8,45 +8,43 @@ use App\Http\Resources\User\UserResource;
 use App\Models\Post;
 use App\Models\SubscriberFollowing;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 class UserController extends Controller
 {
+    public function __construct(
+        protected UserService $userService,
+    ) {}
+
     /**
      * Получить всех пользователей, кроме самого себя
-     * Получить все id, на кого подписан авторизованный пользователь
-     * Пройтись по ним циклом, и проверить есть ли у нас фактические подписки
-     * Если есть совпадения, дать ему аттрибут is_following
+     * Получить данные о подписках
      */
     public function index()
     {
         $users = User::whereNot('id', auth()->id())->get();
 
-        $followingsIds = SubscriberFollowing::where('subscriber_id', auth()->id())
-            ->get('following_id')
-            ->pluck('following_id')
-            ->toArray();
-
-        foreach ($users as $user) {
-            if (in_array($user->id, $followingsIds)) {
-                $user->is_following = true;
-            }
-        }
+        $users = $this->userService->getFollowers($users, auth()->id());
 
         return UserResource::collection($users);
     }
 
     /**
-     * Подгружаем пользователей
+     * Подгружаем посты от пользователя
      * Цепляем image для N+1
+     * получаем лайки на постах через сервис
      */
     public function show(User $user)
     {
         $posts = $user->posts()
+            ->withCount('likedUsers')
             ->with('image')
             ->latest()
             ->get();
+
+        $posts = $this->userService->markLikedPosts($posts, auth()->id());
 
         return PostResource::collection($posts);
     }
@@ -66,14 +64,18 @@ class UserController extends Controller
     /**
      * Получаем посты от пользователей на которых мы подписаны
      * Получаем посты, только там где user_id совпадает с id подписаннных пользователей, исключаем eager loader через with
+     * Получаем лайки на постах через сервис
      */
     public function followingPost()
     {
         $followingIds = auth()->user()->followings()->get()->pluck('id')->toArray();
         $posts = Post::with('image')
+            ->withCount('likedUsers')
             ->whereIn('user_id', $followingIds)
             ->latest()
             ->get();
+
+        $posts = $this->userService->markLikedPosts($posts, auth()->id());
 
         return PostResource::collection($posts);
     }
