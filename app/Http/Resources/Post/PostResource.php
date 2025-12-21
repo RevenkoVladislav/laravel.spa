@@ -21,7 +21,7 @@ class PostResource extends JsonResource
             'image_url' => $this->image?->url, //защита от null error т.к пост может быть без картинки
             'date' => $this->date, //аттрибут date в модели Post
             'is_liked' => $this->is_liked ?? false,
-            'likes_count' => $this->likedUsers->count(),
+            'likes_count' => $this->liked_users_count,
         ];
     }
 }

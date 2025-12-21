@@ -22,7 +22,7 @@ class PostController extends Controller
     }
 
     /**
-     * Берем все посты из БД, где автор это авторизованный пользователь
+     * Берем все посты из БД + картинки + счетчик лайков пользователя, где автор это авторизованный пользователь
      * Обращаемся к сервису, в который передаем все посты, и id авторизованного пользователя
      * Получаем posts которые имеют лайки
      * Отдаем их в виде PostResource
@@ -30,6 +30,7 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::with('image')
+            ->withCount('likedUsers')
             ->where('user_id', auth()->id())
             ->orderBy('created_at', 'desc')
             ->get();

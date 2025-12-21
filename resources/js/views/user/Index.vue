@@ -21,7 +21,7 @@ export default {
         },
 
         toggleFollowing(user) {
-            axios.get(`/api/users/${user.id}/toggle_following`)
+            axios.post(`/api/users/${user.id}/toggle_following`)
                 .then(response => {
                     user.is_following = response.data.is_following;
                 })
