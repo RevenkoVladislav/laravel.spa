@@ -62,12 +62,14 @@ class PostController extends Controller
     /**
      * Используем отношение для авторизованного пользователя
      * привязываем и отвязываем $post
+     * Просчитываем количество лайков
      * возвращаем is_liked для фронта
      */
     public function toggleLike(Post $post)
     {
         $response = auth()->user()->likedPosts()->toggle($post);
         $data['is_liked'] = count($response['attached']) > 0;
+        $data['likes_count'] = $post->likedUsers()->count();
         return $data;
     }
 }
