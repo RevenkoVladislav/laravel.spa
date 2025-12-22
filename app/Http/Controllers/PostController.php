@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Post\RepostRequest;
 use App\Http\Requests\Post\StoreRequest;
 use App\Http\Resources\Post\PostResource;
 use App\Models\LikedPost;
@@ -72,5 +73,17 @@ class PostController extends Controller
         $data['is_liked'] = count($response['attached']) > 0;
         $data['likes_count'] = $post->likedUsers()->count();
         return $data;
+    }
+
+    /**
+     * метод для репоста записи
+     */
+    public function repost(RepostRequest $request, Post $post)
+    {
+        $data = $request->validated();
+        $data['user_id'] = auth()->id();
+        $data['reposted_id'] = $post->id;
+
+        Post::create($data);
     }
 }

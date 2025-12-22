@@ -39,12 +39,25 @@ export default {
                 });
         },
 
+        /**
+         * Метод переводи состояние is_repost в true || false для отображения формы репоста
+         */
         openRepost() {
             this.is_repost = !this.is_repost;
         },
 
-        repost() {
 
+        /**
+         *
+         */
+        repost(post) {
+            axios.post(`/api/posts/${post.id}/repost`, {
+                title: this.title,
+                content: this.content,
+            }).then(response => {
+                this.title = '';
+                this.content = '';
+            });
         },
     },
 }
@@ -53,8 +66,7 @@ export default {
 <template>
     <!-- Вывод поста - заголовок, картинка, контент -->
     <div class="p-6">
-        <h1 class="text-2xl text-center font-bold text-gray-900 mb-4 tracking-tight leading-8">
-            {{ post.title }}</h1>
+        <h1 class="text-2xl text-center font-bold text-gray-900 mb-4 tracking-tight leading-8">{{ post.title }}</h1>
         <div v-if="post.image_url" class="mb-6 rounded-md">
             <img v-if="post.image_url" :src="post.image_url" :alt="post.title"
                  class="w-full mx-auto border hover:border-blue-500">
@@ -106,9 +118,9 @@ export default {
             <div>
                 <label for="content" class="mt-2 block text-sm/6 font-medium text-gray-900">Content</label>
                 <div class="mt-2">
-                                        <textarea v-model="content" id="content" rows="4" @input="errors.content = null"
-                                                  class="block w-full rounded-md bg-gray-50 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                                                  placeholder="Write your content"></textarea>
+                    <textarea v-model="content" id="content" rows="4" @input="errors.content = null"
+                              class="block w-full rounded-md bg-gray-50 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                              placeholder="Write your content"></textarea>
                     <p v-if="errors.content" class="text-red-500">
                         {{ errors.content[0] }}
                     </p>
@@ -116,8 +128,7 @@ export default {
             </div>
 
             <div>
-                <button @click.prevent="repost" type="button"
-                        class="mt-3 flex w-25 justify-center rounded-md bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">
+                <button @click.prevent="repost(post)" type="button" class="mt-3 flex w-25 justify-center rounded-md bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">
                     Repost
                 </button>
             </div>
