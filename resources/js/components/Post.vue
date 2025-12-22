@@ -11,6 +11,9 @@ export default {
      * Отправляем api запрос,
      * Привязка/отвязка лайка
      * Запись кол-ва лайков
+     *
+     * Если посту поставили лайк, запустить событие liked у родителя
+     * Если сняли лайк запустить событие unliked у родителя
      */
     methods: {
         toggleLike(post) {
@@ -18,7 +21,13 @@ export default {
                 .then(response => {
                     post.is_liked = response.data.is_liked;
                     post.likes_count = response.data.likes_count;
-                })
+
+                    if (response.data.is_liked) {
+                        this.$emit('liked', post.id)
+                    } else {
+                        this.$emit('unliked', post.id);
+                    }
+                });
         },
     },
 }

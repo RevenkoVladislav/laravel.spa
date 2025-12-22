@@ -24,13 +24,20 @@ export default {
                     this.posts = response.data.data;
                 });
         },
+
+        /**
+         * удалить post из массива posts по переданному Id
+         */
+        removePost(postId) {
+            this.posts = this.posts.filter(post => post.id !== postId);
+        },
     },
 }
 </script>
 
 <template>
     <div class="mt-6 sm:mx-auto sm:w-full sm:max-w-md space-y-6">
-        <Post :posts="posts" title="Liked Posts"></Post>
+        <Post :posts="posts" title="Liked Posts" @unliked="removePost"></Post>
     </div>
 </template>
 
