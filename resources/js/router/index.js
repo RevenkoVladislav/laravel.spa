@@ -34,6 +34,12 @@ const routes = [
         meta: {auth: true}
     },
     {
+        path: '/users/liked-posts',
+        name: 'user.liked-posts',
+        component: () => import('../views/user/LikedPosts.vue'),
+        meta: {auth: true}
+    },
+    {
         path: '/users/:id',
         name: 'user.show',
         component: () => import('../views/user/Show.vue'),

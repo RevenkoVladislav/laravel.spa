@@ -12,7 +12,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/users', [UserController::class, 'index']);
-    Route::get('/users/following_posts', [UserController::class, 'followingPost']);
+    Route::get('/users/following_posts', [UserController::class, 'followingUnlikedPost']);
+    Route::get('/users/liked_posts', [UserController::class, 'likedPosts']);
     Route::get('/users/{user}/posts', [UserController::class, 'show']);
     Route::post('/users/{user}/toggle_following', [UserController::class, 'toggleFollowing']);
 

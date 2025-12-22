@@ -33,7 +33,7 @@ export default {
 
 <template>
     <div class="mt-6 sm:mx-auto sm:w-full sm:max-w-md space-y-6">
-        <Post :posts="posts"></Post>
+        <Post :posts="posts" title="Published Posts"></Post>
     </div>
 </template>
 

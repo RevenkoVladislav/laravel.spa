@@ -1,7 +1,7 @@
 <script>
 import Post from '../../components/Post.vue';
 export default {
-    name: "Show",
+    name: "LikedPosts",
 
     components: {
         Post,
@@ -10,7 +10,6 @@ export default {
     data() {
         return {
             posts: [],
-            userId: this.$route.params.id,
         }
     },
 
@@ -19,14 +18,11 @@ export default {
     },
 
     methods: {
-        /**
-         * Получение всех постов
-         */
         getPosts() {
-            axios.get(`/api/users/${this.userId}/posts`)
+            axios.get('/api/users/liked_posts')
                 .then(response => {
                     this.posts = response.data.data;
-                })
+                });
         },
     },
 }
@@ -34,7 +30,7 @@ export default {
 
 <template>
     <div class="mt-6 sm:mx-auto sm:w-full sm:max-w-md space-y-6">
-        <Post :posts="posts" title="Published Posts"></Post>
+        <Post :posts="posts" title="Liked Posts"></Post>
     </div>
 </template>
 

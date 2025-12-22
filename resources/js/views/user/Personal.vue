@@ -150,7 +150,7 @@ export default {
       </button>
     </div>
 
-    <Post :posts="posts"></Post>
+    <Post :posts="posts" title="Published Posts"></Post>
 
   </div>
 </template>

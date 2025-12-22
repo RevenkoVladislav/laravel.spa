@@ -19,6 +19,7 @@ const logout = async () => {
         <router-link v-if="auth.user" :to="{ name: 'user.personal' }" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:outline-none font-medium rounded-lg text-sm px-4 py-2.5 text-center leading-5">Personal</router-link>
         <router-link v-if="auth.user" :to="{ name: 'user.index' }" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:outline-none font-medium rounded-lg text-sm px-4 py-2.5 text-center leading-5">Users</router-link>
         <router-link v-if="auth.user" :to="{ name: 'user.feed' }" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:outline-none font-medium rounded-lg text-sm px-4 py-2.5 text-center leading-5">Feed</router-link>
+        <router-link v-if="auth.user" :to="{ name: 'user.liked-posts' }" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:outline-none font-medium rounded-lg text-sm px-4 py-2.5 text-center leading-5">Liked Posts</router-link>
         <button v-if="auth.user" @click="logout" class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:outline-none font-medium rounded-lg text-sm px-4 py-2.5 text-center leading-5 cursor-pointer">Logout</button>
     </div>
     <router-view/>

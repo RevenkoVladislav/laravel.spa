@@ -70,7 +70,7 @@ class UserController extends Controller
      * И НЕ совпадают с пролайканными постами
      * исключаем eager loader через with
      */
-    public function followingPost()
+    public function followingUnlikedPost()
     {
         $followingIds = auth()->user()->followings()->get()->pluck('id')->toArray();
 
@@ -85,6 +85,27 @@ class UserController extends Controller
             ->whereNotIn('id', $likedPostIds)
             ->latest()
             ->get();
+
+        return PostResource::collection($posts);
+    }
+
+    /**
+     * Метод получения пролайканных постов
+     * Формируем посты, для авторизованного пользователя - отношение likedPosts
+     * Вместе с картинкой (N + 1)
+     * Вместе со счетчиком лайков на посте
+     * Возвращаем PostResource
+     */
+    public function likedPosts()
+    {
+        $posts = auth()->user()
+            ->likedPosts()
+            ->with('image')
+            ->withCount('likedUsers')
+            ->latest()
+            ->get();
+
+        $posts = $this->userService->markLikedPosts($posts, auth()->id());
 
         return PostResource::collection($posts);
     }
