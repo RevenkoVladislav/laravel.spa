@@ -1,52 +1,16 @@
 <script>
+import ShowPost from './ShowPost.vue';
 export default {
     name: "Post",
+
+    components: {
+        ShowPost,
+    },
 
     props: [
         'posts',
         'title',
     ],
-
-    data() {
-      return {
-          is_repost: false,
-          title: '',
-          content: '',
-          errors: {},
-      }
-    },
-
-    /**
-     * Отправляем api запрос,
-     * Привязка/отвязка лайка
-     * Запись кол-ва лайков
-     *
-     * Если посту поставили лайк, запустить событие liked у родителя
-     * Если сняли лайк запустить событие unliked у родителя
-     */
-    methods: {
-        toggleLike(post) {
-            axios.post(`/api/posts/${post.id}/toggle_like`)
-                .then(response => {
-                    post.is_liked = response.data.is_liked;
-                    post.likes_count = response.data.likes_count;
-
-                    if (response.data.is_liked) {
-                        this.$emit('liked', post.id)
-                    } else {
-                        this.$emit('unliked', post.id);
-                    }
-                });
-        },
-
-        openRepost() {
-            this.is_repost = !this.is_repost;
-        },
-
-        repost() {
-
-        },
-    },
 }
 </script>
 
@@ -57,71 +21,11 @@ export default {
             <div v-for="post in posts" :key="post.id"
                  class="bg-gray-100 hover:bg-gray-300 rounded-md p-1 border-t border-gray-300 border hover:border-gray-600">
 
-                <!-- Вывод поста - заголовок, картинка, контент -->
-                <div class="p-6">
-                    <h1 class="text-2xl text-center font-bold text-gray-900 mb-4 tracking-tight leading-8">
-                        {{ post.title }}</h1>
-                    <div v-if="post.image_url" class="mb-6 rounded-md">
-                        <img v-if="post.image_url" :src="post.image_url" :alt="post.title" class="w-full mx-auto border hover:border-blue-500">
-                    </div>
-                    <p class="text-black-600">{{ post.content }}</p>
-                    <!-- Конец вывода поста -->
+                <ShowPost :post="post"
+                          @liked="$emit('liked', $event)"
+                          @unliked="$emit('unliked', $event)"
+                ></ShowPost>
 
-                    <!-- Блок с иконками - Лайк и Репост -->
-                    <div class="flex justify-between items-center mt-5">
-                        <div class="flex items-center">
-                            <svg @click.prevent="toggleLike(post)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" :class="['mr-2 size-6 stroke-indigo-500 cursor-pointer hover:fill-indigo-500', post.is_liked ? 'fill-indigo-500' : 'fill-gray-100']">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-                            </svg>
-                            <p class="font-bold text-xl">{{ post.likes_count }}</p>
-
-                            <svg @click.prevent="openRepost" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" :class="['mr-2 ml-5 size-6 stroke-indigo-500 cursor-pointer hover:fill-indigo-500']">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
-                            </svg>
-                            <p class="font-bold text-xl">0</p>
-                        </div>
-                        <p class="text-right text-sm text-slate-500">{{ post.date }}</p>
-                    </div>
-                    <!-- Конец блока с иконками -->
-
-                    <!-- Блок для репоста -->
-                    <div v-if="is_repost" class="mt-3">
-                        <div class="flex justify-center items-center border-b pb-3">
-                            <p class="text-lg font-medium">Write repost</p>
-                        </div>
-
-                        <div>
-                            <label for="title" class="mt-2 block text-sm/6 font-medium text-gray-900">Title</label>
-                            <div class="mt-2">
-                                <input v-model="title" @input="errors.title = null" id="title" type="text" required
-                                       placeholder="Title"
-                                       class="block w-full rounded-md bg-gray-50 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
-                                <p v-if="errors.title" class="text-red-500">
-                                    {{ errors.title[0] }}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="content" class="mt-2 block text-sm/6 font-medium text-gray-900">Content</label>
-                            <div class="mt-2">
-                                        <textarea v-model="content" id="content" rows="4" @input="errors.content = null" class="block w-full rounded-md bg-gray-50 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                                                  placeholder="Write your content"></textarea>
-                                <p v-if="errors.content" class="text-red-500">
-                                    {{ errors.content[0] }}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div>
-                            <button @click.prevent="repost" type="button" class="mt-3 flex w-25 justify-center rounded-md bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">
-                                Repost
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Конец блока репоста -->
-
-                </div>
             </div>
         </div>
     </div>
