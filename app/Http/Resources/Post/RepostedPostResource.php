@@ -5,7 +5,7 @@ namespace App\Http\Resources\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PostResource extends JsonResource
+class RepostedPostResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,10 +19,9 @@ class PostResource extends JsonResource
             'title' => $this->title,
             'content' => $this->content,
             'image_url' => $this->image?->url, //защита от null error т.к пост может быть без картинки
-            'date' => $this->date, //аттрибут date в модели Post
-            'is_liked' => $this->is_liked ?? false,
-            'likes_count' => $this->liked_users_count,
-            'reposted_post' => new RepostedPostResource($this->repostedPost),
+//            'date' => $this->date, //аттрибут date в модели Post
+//            'is_liked' => $this->is_liked ?? false,
+//            'likes_count' => $this->liked_users_count,
         ];
     }
 }

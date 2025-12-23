@@ -46,18 +46,25 @@ export default {
             this.is_repost = !this.is_repost;
         },
 
+        closedRepost() {
+            if (!this.errors) {
+                this.is_repost = false;
+            }
+        },
+
 
         /**
-         *
+         * Передаем через axios данные по репосту на бэк
+         * После отправки обнуляем данные из формы
          */
         repost(post) {
-            axios.post(`/api/posts/${post.id}/repost`, {
-                title: this.title,
-                content: this.content,
-            }).then(response => {
-                this.title = '';
-                this.content = '';
-            });
+                axios.post(`/api/posts/${post.id}/repost`, {
+                    title: this.title,
+                    content: this.content,
+                }).then(response => {
+                    this.title = '';
+                    this.content = '';
+                });
         },
     },
 }
@@ -73,6 +80,17 @@ export default {
         </div>
         <p class="text-black-600">{{ post.content }}</p>
         <!-- Конец вывода поста -->
+
+        <!-- Вывод данных из репоста -->
+        <div v-if="post.reposted_post" class="bg-gray-200 p-4 my-4 border border-gray-300 hover:border-gray-400 hover:bg-indigo-100 rounded-md">
+            <h1 class="text-2xl text-center font-bold text-gray-900 mb-4 tracking-tight leading-8">{{ post.reposted_post.title }}</h1>
+            <div v-if="post.reposted_post.image_url" class="mb-6 rounded-md">
+                <img v-if="post.reposted_post.image_url" :src="post.reposted_post.image_url" :alt="post.reposted_post.title"
+                     class="w-full mx-auto border hover:border-blue-500">
+            </div>
+            <p class="text-black-600">{{ post.reposted_post.content }}</p>
+        </div>
+        <!-- Конец вывода данных из репоста -->
 
         <!-- Блок с иконками - Лайк и Репост -->
         <div class="flex justify-between items-center mt-5">
@@ -128,7 +146,7 @@ export default {
             </div>
 
             <div>
-                <button @click.prevent="repost(post)" type="button" class="mt-3 flex w-25 justify-center rounded-md bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">
+                <button @click.prevent="repost(post), closedRespot()" type="button" class="mt-3 flex w-25 justify-center rounded-md bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">
                     Repost
                 </button>
             </div>
