@@ -99,4 +99,12 @@ class PostController extends Controller
             'reposted_count' => $post->repostedByPosts()->count(),
         ]);
     }
+
+    /**
+     * Метод по сохранению коммента
+     */
+    public function storeComment(Post $post)
+    {
+
+    }
 }

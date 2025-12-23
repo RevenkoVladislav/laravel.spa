@@ -12,6 +12,7 @@ export default {
             title: '',
             content: '',
             errors: {},
+            body: '',
         }
     },
 
@@ -94,6 +95,15 @@ export default {
                 this.errors = error.response.data.errors;
             });
         },
+
+        /**
+         * Метод по созданию коммента.
+         */
+        storeComment() {
+            axios.post(`/api/posts/${post.id}/comment`, {
+
+            })
+        }
     },
 }
 </script>
@@ -180,6 +190,20 @@ export default {
             </div>
         </div>
         <!-- Конец блока репоста -->
+
+        <!-- Блок с комментариями -->
+        <div class="mt-2">
+            <input v-model="body" @input="errors.body = null" type="text"
+                   placeholder="Enter your comment"
+                   class="block w-full rounded-md bg-gray-50 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
+            <p v-if="errors.body" class="text-red-500">
+                {{ errors.body[0] }}
+            </p>
+            <button @click.prevent="storeComment" type="button" class="mt-3 flex w-25 justify-center rounded-md bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">
+                Comment
+            </button>
+        </div>
+        <!-- Конец блока с комментариями -->
 
     </div>
 </template>
