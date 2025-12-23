@@ -37,7 +37,7 @@ export default {
                     image_id: id,
                 }).then(response => {
                     this.posts.unshift(response.data.data);
-                    this.resetForm();
+                    this.cancelForm();
                 });
             } catch (error) {
                 this.errors = error.response.data.errors;
@@ -172,7 +172,7 @@ export default {
             </div>
 
             <div>
-                <button @click.prevent="store(), isFormVisible = false" type="button" class="flex w-full justify-center rounded-md bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">
+                <button @click.prevent="store()" type="button" class="flex w-full justify-center rounded-md bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">
                     Publish
                 </button>
             </div>

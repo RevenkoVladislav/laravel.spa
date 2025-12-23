@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Post extends Model
@@ -19,8 +20,6 @@ class Post extends Model
         'user_id',
         'reposted_id',
     ];
-
-    protected $with = ['repostedPost'];
 
     public function image(): HasOne
     {
@@ -36,6 +35,11 @@ class Post extends Model
     public function repostedPost(): BelongsTo
     {
         return $this->belongsTo(Post::class, 'reposted_id', 'id');
+    }
+
+    public function repostedByPosts(): HasMany
+    {
+        return $this->hasMany(Post::class, 'reposted_id', 'id');
     }
 
     public function getDateAttribute()

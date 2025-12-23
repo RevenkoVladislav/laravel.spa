@@ -34,7 +34,7 @@ class UserController extends Controller
 
     /**
      * Подгружаем посты от пользователя
-     * Цепляем image для N+1
+     * Цепляем image и repostedPost для N+1
      * получаем лайки на постах через сервис
      */
     public function show(User $user)
@@ -42,6 +42,8 @@ class UserController extends Controller
         $posts = $user->posts()
             ->withCount('likedUsers')
             ->with('image')
+            ->with('repostedPost')
+            ->withCount('repostedByPosts')
             ->latest()
             ->get();
 
@@ -81,6 +83,8 @@ class UserController extends Controller
 
         $posts = Post::with('image')
             ->withCount('likedUsers')
+            ->with('repostedPost')
+            ->withCount('repostedByPosts')
             ->whereIn('user_id', $followingIds)
             ->whereNotIn('id', $likedPostIds)
             ->latest()
@@ -102,6 +106,8 @@ class UserController extends Controller
             ->likedPosts()
             ->with('image')
             ->withCount('likedUsers')
+            ->with('repostedPost')
+            ->withCount('repostedByPosts')
             ->latest()
             ->get();
 

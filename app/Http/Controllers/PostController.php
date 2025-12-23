@@ -31,6 +31,8 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::with('image')
+            ->with('repostedPost')
+            ->withCount('repostedByPosts')
             ->withCount('likedUsers')
             ->where('user_id', auth()->id())
             ->orderBy('created_at', 'desc')
@@ -77,6 +79,9 @@ class PostController extends Controller
 
     /**
      * метод для репоста записи
+     * Заполняем data данными о пользователе и id post
+     * создаем запись
+     * возвращаем посчитанное количество репоста для отображения на фронте
      */
     public function repost(RepostRequest $request, Post $post)
     {
@@ -85,5 +90,9 @@ class PostController extends Controller
         $data['reposted_id'] = $post->id;
 
         Post::create($data);
+
+        return response()->json([
+            'reposted_count' => $post->repostedByPosts()->count(),
+        ]);
     }
 }
