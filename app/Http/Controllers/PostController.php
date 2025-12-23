@@ -30,10 +30,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with('image')
-            ->with('repostedPost')
-            ->withCount('repostedByPosts')
-            ->withCount('likedUsers')
+        $posts = Post::with(['image', 'repostedPost'])
+            ->withCount(['likedUsers', 'repostedByPosts'])
             ->where('user_id', auth()->id())
             ->orderBy('created_at', 'desc')
             ->get();
@@ -79,12 +77,18 @@ class PostController extends Controller
 
     /**
      * метод для репоста записи
+     *
      * Заполняем data данными о пользователе и id post
      * создаем запись
      * возвращаем посчитанное количество репоста для отображения на фронте
      */
     public function repost(RepostRequest $request, Post $post)
     {
+        //Если нужно запретить репост репоста, то используем этот код.
+//        if ($post->reposted_id !== null) {
+//            abort(403, 'You cannot repost a repost');
+//        }
+
         $data = $request->validated();
         $data['user_id'] = auth()->id();
         $data['reposted_id'] = $post->id;
