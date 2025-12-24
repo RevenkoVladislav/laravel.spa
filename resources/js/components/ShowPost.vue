@@ -13,7 +13,27 @@ export default {
             content: '',
             errors: {},
             body: '',
+            isExpanded: false,
+            limit: 500,
         }
+    },
+
+    computed: {
+        /**
+         * Метод для лимита символов в контенте поста
+         * Проверка на пустой content для исключения ошибок
+         * Если текст короче лимита то ничего не трогаем
+         * При достижении лимита в конце строки поставить троеточие
+         */
+        truncatedContent() {
+            if (!this.post?.content) return '';
+
+            if (this.post.content.length <= this.limit) {
+                return this.post.content;
+            }
+
+            return this.post.content.slice(0, this.limit) + '...';
+        },
     },
 
     methods: {
@@ -116,7 +136,13 @@ export default {
             <img v-if="post.image_url" :src="post.image_url" :alt="post.title"
                  class="w-full mx-auto border hover:border-blue-500">
         </div>
-        <p class="text-black-600">{{ post.content }}</p>
+        <p class="text-black-600">
+            {{ isExpanded ? post.content : truncatedContent }}
+        </p>
+        <button v-if="post.content.length > 500" @click="isExpanded = !isExpanded"
+            class="text-indigo-500 hover:underline">
+            {{ isExpanded ? 'Hide' : 'Read more' }}
+        </button>
         <!-- Конец вывода поста -->
 
         <!-- Вывод данных из репоста -->
