@@ -1,6 +1,11 @@
 <script>
+import ExpandableContent from './ExpandableContent.vue';
 export default {
     name: "ShowPost",
+
+    components: {
+        ExpandableContent,
+    },
 
     props: [
         'post',
@@ -13,27 +18,7 @@ export default {
             content: '',
             errors: {},
             body: '',
-            isExpanded: false,
-            limit: 500,
         }
-    },
-
-    computed: {
-        /**
-         * Метод для лимита символов в контенте поста
-         * Проверка на пустой content для исключения ошибок
-         * Если текст короче лимита то ничего не трогаем
-         * При достижении лимита в конце строки поставить троеточие
-         */
-        truncatedContent() {
-            if (!this.post?.content) return '';
-
-            if (this.post.content.length <= this.limit) {
-                return this.post.content;
-            }
-
-            return this.post.content.slice(0, this.limit) + '...';
-        },
     },
 
     methods: {
@@ -136,13 +121,11 @@ export default {
             <img v-if="post.image_url" :src="post.image_url" :alt="post.title"
                  class="w-full mx-auto border hover:border-blue-500">
         </div>
-        <p class="text-black-600">
-            {{ isExpanded ? post.content : truncatedContent }}
-        </p>
-        <button v-if="post.content.length > 500" @click="isExpanded = !isExpanded"
-            class="text-indigo-500 hover:underline">
-            {{ isExpanded ? 'Hide' : 'Read more' }}
-        </button>
+
+        <!-- Вывод контента с кнопкой ReadMore -->
+        <expandable-content :content="post.content" :limit="500" />
+        <!-- Конец вывода контента с кнопкой ReadMore -->
+
         <!-- Конец вывода поста -->
 
         <!-- Вывод данных из репоста -->
@@ -152,7 +135,13 @@ export default {
                 <img v-if="post.reposted_post.image_url" :src="post.reposted_post.image_url" :alt="post.reposted_post.title"
                      class="w-full mx-auto border hover:border-blue-500">
             </div>
-            <p class="text-black-600">{{ post.reposted_post.content }}</p>
+
+            <!-- Вывод контента с кнопкой ReadMore -->
+            <div v-if="post.reposted_post" class="border-l-4 border-indigo-200 ml-4 pl-4">
+                <expandable-content :content="post.reposted_post.content" :limit="200" />
+            </div>
+            <!-- Конец вывода контента с кнопкой ReadMore -->
+
         </div>
         <!-- Конец вывода данных из репоста -->
 
