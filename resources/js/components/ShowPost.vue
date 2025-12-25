@@ -1,10 +1,12 @@
 <script>
 import ExpandableContent from './ExpandableContent.vue';
+import Comment from './Comment.vue';
 export default {
     name: "ShowPost",
 
     components: {
         ExpandableContent,
+        Comment,
     },
 
     props: [
@@ -13,11 +15,13 @@ export default {
 
     data() {
         return {
+            is_comment: false,
             is_repost: false,
             title: '',
             content: '',
             errors: {},
             body: '',
+            comments: [],
         }
     },
 
@@ -67,6 +71,15 @@ export default {
         },
 
         /**
+         * Метод переводит состояние is_comment в true || false для отображение комментариев
+         * Тригерим метод на получение всех постов
+         */
+        openComment(post) {
+            this.is_comment = !this.is_comment;
+            this.getComments(post);
+        },
+
+        /**
          * Защитная проверка роутинга
          * Возвращает true если мы на главной странице пользователя
          * @returns {boolean}
@@ -113,11 +126,22 @@ export default {
             })
                 .then(response => {
                     this.body = '';
+                    post.comments_count = response.data.comments_count;
                     console.log(response);
                 })
                 .catch(error => {
                     this.errors = error.response.data.errors;
                 });
+        },
+
+        /**
+         * Метод для получения комментариев к определенному посту
+         */
+        getComments(post) {
+           axios.get(`/api/posts/${post.id}/comment`)
+               .then(response => {
+                   this.comments = response.data.data;
+               });
         },
     },
 }
@@ -157,7 +181,7 @@ export default {
         </div>
         <!-- Конец вывода данных из репоста -->
 
-        <!-- Блок с иконками - Лайк и Репост -->
+        <!-- Блок с иконками - Лайк, Коммент и Репост -->
         <div class="flex justify-between items-center mt-5">
             <div class="flex items-center">
                 <svg @click.prevent="toggleLike(post)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -168,9 +192,17 @@ export default {
                 </svg>
                 <p class="font-bold text-xl">{{ post.likes_count }}</p>
 
+                <svg @click.prevent="openComment(post)" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                     stroke-width="1.5" stroke="currentColor"
+                     :class="['mr-2 ml-5 size-6 stroke-indigo-500 cursor-pointer hover:fill-indigo-500', this.is_comment ? 'fill-indigo-500' : 'fill-gray-100']">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
+                </svg>
+                <p class="font-bold text-xl">{{ post.comments_count }}</p>
+
+
                 <svg @click.prevent="openRepost" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                      stroke-width="1.5" stroke="currentColor"
-                     :class="['mr-2 ml-5 size-6 stroke-indigo-500 cursor-pointer hover:fill-indigo-500', post.is_repost ? 'fill-indigo-500' : 'fill-gray-100']">
+                     :class="['mr-2 ml-5 size-6 stroke-indigo-500 cursor-pointer hover:fill-indigo-500', this.is_repost ? 'fill-indigo-500' : 'fill-gray-100']">
                     <path stroke-linecap="round" stroke-linejoin="round"
                           d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"/>
                 </svg>
@@ -219,7 +251,7 @@ export default {
         <!-- Конец блока репоста -->
 
         <!-- Блок с комментариями -->
-        <div class="mt-2">
+        <div v-if="is_comment" class="mt-4">
             <input v-model="body" @input="errors.body = null" type="text"
                    placeholder="Enter your comment"
                    class="block w-full rounded-md bg-gray-50 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
@@ -229,6 +261,11 @@ export default {
             <button @click.prevent="storeComment(post)" type="button" class="mt-3 flex w-25 justify-center rounded-md bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">
                 Comment
             </button>
+
+            <!-- Вывод всех комментариев для поста -->
+            <Comment :comments="this.comments"></Comment>
+            <!-- Конец вывода всех комментариев для поста -->
+
         </div>
         <!-- Конец блока с комментариями -->
 

@@ -26,7 +26,7 @@ class PostController extends Controller
     }
 
     /**
-     * Берем все посты из БД + картинки + счетчик лайков пользователя, где автор это авторизованный пользователь
+     * Берем все посты из БД + картинки + счетчик лайков пользователя + счетчик комментариев, где автор это авторизованный пользователь
      * Обращаемся к сервису, в который передаем все посты, и id авторизованного пользователя
      * Получаем posts которые имеют лайки
      * Отдаем их в виде PostResource
@@ -34,7 +34,7 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::with(['image', 'repostedPost'])
-            ->withCount(['likedUsers', 'repostedByPosts'])
+            ->withCount(['likedUsers', 'repostedByPosts', 'comments'])
             ->where('user_id', auth()->id())
             ->orderBy('created_at', 'desc')
             ->get();
@@ -118,6 +118,19 @@ class PostController extends Controller
 
         $comment = Comment::create($data);
 
-        return CommentResource::make($comment);
+        return response()->json([
+            'comment' => CommentResource::make($comment),
+            'comments_count' => $post->comments()->count(),
+        ]);
+    }
+
+    /**
+     * Метод для получения всех комментариев для конкретного поста
+     */
+    public function getComments(Post $post)
+    {
+        $comments = $post->comments()->with('user')->latest()->get();
+
+        return CommentResource::collection($comments);
     }
 }

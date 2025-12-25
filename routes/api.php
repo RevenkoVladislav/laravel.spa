@@ -24,4 +24,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/posts/{post}/toggle_like', [PostController::class, 'toggleLike']);
     Route::post('/posts/{post}/repost', [PostController::class, 'repost']);
     Route::post('/posts/{post}/comment', [PostController::class, 'storeComment']);
+    Route::get('/posts/{post}/comment', [PostController::class, 'getComments']);
 });
