@@ -17,6 +17,7 @@ export default {
         return {
             is_comment: false,
             is_repost: false,
+            commentsLoaded: false,
             title: '',
             content: '',
             errors: {},
@@ -72,11 +73,15 @@ export default {
 
         /**
          * Метод переводит состояние is_comment в true || false для отображение комментариев
+         * Снижаем нагрузку на api за счет проверки
          * Тригерим метод на получение всех постов
          */
         openComment(post) {
             this.is_comment = !this.is_comment;
-            this.getComments(post);
+
+            if(this.is_comment && !this.commentsLoaded) {
+                this.getComments(post);
+            }
         },
 
         /**
@@ -118,6 +123,8 @@ export default {
          * Метод по созданию коммента.
          * Отправляем api запрос с body комментария
          *
+         * Цепляем актуальный счетчик и пропихиваем новый коммент в массив
+         *
          * Ловим ошибки чтобы их выводить
          */
         storeComment(post) {
@@ -141,6 +148,7 @@ export default {
            axios.get(`/api/posts/${post.id}/comment`)
                .then(response => {
                    this.comments = response.data.data;
+                   this.commentsLoaded = true;
                });
         },
     },

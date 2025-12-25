@@ -108,7 +108,7 @@ class PostController extends Controller
      * Валидация данных
      * Добавление в data данных о id поста и пользователя
      * Сохраняем в бд
-     * Возвращаем CommentResource
+     * Возвращаем CommentResource и данные по счетчику
      */
     public function storeComment(CommentRequest $request, Post $post)
     {

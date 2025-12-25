@@ -26,7 +26,9 @@ export default {
             <!-- Сам коммент -->
             <div class="flex-1">
                 <div class="flex items-center justify-between">
-                    <h4 class="text-sm font-bold text-gray-900">{{ comment.user.name }}</h4>
+                    <h4 class="text-sm font-bold text-gray-900 hover:text-indigo-500">
+                        <router-link :to="{name: 'user.show', params: {id: comment.user.id}}">{{ comment.user.name }}</router-link>
+                    </h4>
                     <span class="text-xs text-gray-500">{{ comment.date }}</span>
                 </div>
                 <p class="text-sm text-gray-700 mt-1 leading-relaxed">
@@ -40,6 +42,9 @@ export default {
                 </div>
             </div>
         </div>
+    </div>
+    <div v-else class="text-center text-gray-400">
+        No comments yet
     </div>
 </template>
 
