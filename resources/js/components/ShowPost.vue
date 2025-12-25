@@ -127,7 +127,7 @@ export default {
                 .then(response => {
                     this.body = '';
                     post.comments_count = response.data.comments_count;
-                    console.log(response);
+                    this.comments.unshift(response.data.comment)
                 })
                 .catch(error => {
                     this.errors = error.response.data.errors;
