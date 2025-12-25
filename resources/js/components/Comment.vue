@@ -37,7 +37,7 @@ export default {
 
                 <!-- Кнопки для ответа и лайка -->
                 <div class="mt-2 flex items-center space-x-4">
-                    <button class="text-xs text-gray-400 hover:text-indigo-500 transition-colors">Answer</button>
+                    <button @click="$emit('answer', comment)" class="text-xs text-gray-400 hover:text-indigo-500 transition-colors cursor-pointer">Answer</button>
                     <button class="text-xs text-gray-400 hover:text-red-500 transition-colors">Like</button>
                 </div>
             </div>

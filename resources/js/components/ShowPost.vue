@@ -23,6 +23,7 @@ export default {
             errors: {},
             body: '',
             comments: [],
+            parentId: null,
         }
     },
 
@@ -121,7 +122,7 @@ export default {
 
         /**
          * Метод по созданию коммента.
-         * Отправляем api запрос с body комментария
+         * Отправляем api запрос с body и id родительского комментария (если есть)
          *
          * Цепляем актуальный счетчик и пропихиваем новый коммент в массив
          *
@@ -129,9 +130,11 @@ export default {
          */
         storeComment(post) {
             axios.post(`/api/posts/${post.id}/comment`, {
-                body: this.body
+                body: this.body,
+                parent_id: this.parentId,
             })
                 .then(response => {
+                    this.parentId = null;
                     this.body = '';
                     post.comments_count = response.data.comments_count;
                     this.comments.unshift(response.data.comment)
@@ -139,6 +142,10 @@ export default {
                 .catch(error => {
                     this.errors = error.response.data.errors;
                 });
+        },
+
+        handleAnswer(comment) {
+            console.log(comment);
         },
 
         /**
@@ -271,7 +278,7 @@ export default {
             </button>
 
             <!-- Вывод всех комментариев для поста -->
-            <Comment :comments="this.comments"></Comment>
+            <Comment :comments="this.comments" @answer="handleAnswer"></Comment>
             <!-- Конец вывода всех комментариев для поста -->
 
         </div>
