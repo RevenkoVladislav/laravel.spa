@@ -34,7 +34,7 @@ const submit = async () => {
                     <div class="mt-2">
                         <input v-model="form.email" id="email" type="email" name="email" placeholder="Email" required autocomplete="email" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                     </div>
-                    <p v-if="errors.message" class="text-red-500">
+                    <p v-if="errors.message" class="text-red-500 text-sm mt-2">
                         {{ errors.message[0] }}
                     </p>
                 </div>
@@ -44,7 +44,7 @@ const submit = async () => {
                     <div class="mt-2">
                         <input v-model="form.password" id="password" type="password" placeholder="Password" name="password" required autocomplete="password" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                     </div>
-                    <p v-if="errors.message" class="text-red-500">
+                    <p v-if="errors.message" class="text-red-500 text-sm mt-2">
                         {{ errors.message[0] }}
                     </p>
                 </div>

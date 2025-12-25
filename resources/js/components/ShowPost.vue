@@ -68,11 +68,11 @@ export default {
 
         /**
          * Защитная проверка роутинга
-         * Возвращает true если мы на главное странице пользователя
+         * Возвращает true если мы на главной странице пользователя
          * @returns {boolean}
          */
         isPersonal() {
-          return this.$route.name === 'user.personal';
+            return this.$route.name === 'user.personal';
         },
 
         /**
@@ -103,12 +103,22 @@ export default {
 
         /**
          * Метод по созданию коммента.
+         * Отправляем api запрос с body комментария
+         *
+         * Ловим ошибки чтобы их выводить
          */
-        storeComment() {
+        storeComment(post) {
             axios.post(`/api/posts/${post.id}/comment`, {
-
+                body: this.body
             })
-        }
+                .then(response => {
+                    this.body = '';
+                    console.log(response);
+                })
+                .catch(error => {
+                    this.errors = error.response.data.errors;
+                });
+        },
     },
 }
 </script>
@@ -123,7 +133,9 @@ export default {
         </div>
 
         <!-- Вывод контента с кнопкой ReadMore -->
-        <expandable-content :content="post.content" :limit="500" />
+        <div class="expandable-content">
+            <expandable-content :content="post.content" :limit="500" />
+        </div>
         <!-- Конец вывода контента с кнопкой ReadMore -->
 
         <!-- Конец вывода поста -->
@@ -137,7 +149,7 @@ export default {
             </div>
 
             <!-- Вывод контента с кнопкой ReadMore -->
-            <div v-if="post.reposted_post" class="border-l-4 border-indigo-200 ml-4 pl-4">
+            <div v-if="post.reposted_post" class="border-l-4 border-indigo-200 ml-4 pl-4 expandable-content">
                 <expandable-content :content="post.reposted_post.content" :limit="200" />
             </div>
             <!-- Конец вывода контента с кнопкой ReadMore -->
@@ -180,7 +192,7 @@ export default {
                     <input v-model="title" @input="errors.title = null" id="title" type="text" required
                            placeholder="Title"
                            class="block w-full rounded-md bg-gray-50 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
-                    <p v-if="errors.title" class="text-red-500">
+                    <p v-if="errors.title" class="text-red-500 text-sm mt-2">
                         {{ errors.title[0] }}
                     </p>
                 </div>
@@ -192,7 +204,7 @@ export default {
                     <textarea v-model="content" id="content" rows="4" @input="errors.content = null"
                               class="block w-full rounded-md bg-gray-50 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                               placeholder="Write your content"></textarea>
-                    <p v-if="errors.content" class="text-red-500">
+                    <p v-if="errors.content" class="text-red-500 text-sm mt-2">
                         {{ errors.content[0] }}
                     </p>
                 </div>
@@ -211,10 +223,10 @@ export default {
             <input v-model="body" @input="errors.body = null" type="text"
                    placeholder="Enter your comment"
                    class="block w-full rounded-md bg-gray-50 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
-            <p v-if="errors.body" class="text-red-500">
+            <p v-if="errors.body" class="text-red-500 text-sm mt-2">
                 {{ errors.body[0] }}
             </p>
-            <button @click.prevent="storeComment" type="button" class="mt-3 flex w-25 justify-center rounded-md bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">
+            <button @click.prevent="storeComment(post)" type="button" class="mt-3 flex w-25 justify-center rounded-md bg-gradient-to-r from-indigo-400 via-indigo-500 to-indigo-600 hover:bg-gradient-to-br focus:ring-2 focus:outline-none focus:ring-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer">
                 Comment
             </button>
         </div>
@@ -224,5 +236,13 @@ export default {
 </template>
 
 <style scoped>
+/*необходимо для предотвращения подвисания при скролинге*/
+.expandable-content {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 100px;
+}
 
+p {
+    will-change: height;
+}
 </style>

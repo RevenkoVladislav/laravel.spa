@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Post\CommentRequest;
 use App\Http\Requests\Post\RepostRequest;
 use App\Http\Requests\Post\StoreRequest;
+use App\Http\Resources\Comment\CommentResource;
 use App\Http\Resources\Post\PostResource;
+use App\Models\Comment;
 use App\Models\LikedPost;
 use App\Models\Post;
 use App\Models\PostImage;
@@ -102,9 +105,19 @@ class PostController extends Controller
 
     /**
      * Метод по сохранению коммента
+     * Валидация данных
+     * Добавление в data данных о id поста и пользователя
+     * Сохраняем в бд
+     * Возвращаем CommentResource
      */
-    public function storeComment(Post $post)
+    public function storeComment(CommentRequest $request, Post $post)
     {
+        $data = $request->validated();
+        $data['post_id'] = $post->id;
+        $data['user_id'] = auth()->id();
 
+        $comment = Comment::create($data);
+
+        return CommentResource::make($comment);
     }
 }

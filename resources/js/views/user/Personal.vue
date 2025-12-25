@@ -129,7 +129,7 @@ export default {
                     <input v-model="title" @input="errors.title = null" id="title" type="text" required
                            placeholder="Title"
                            class="block w-full rounded-md bg-gray-50 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
-                    <p v-if="errors.title" class="text-red-500">
+                    <p v-if="errors.title" class="text-red-500 text-sm mt-2">
                         {{ errors.title[0] }}
                     </p>
                 </div>
@@ -140,7 +140,7 @@ export default {
                 <div class="mt-2">
                     <textarea v-model="content" id="content" rows="4" @input="errors.content = null" class="block w-full rounded-md bg-gray-50 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   placeholder="Write your content"></textarea>
-                    <p v-if="errors.content" class="text-red-500">
+                    <p v-if="errors.content" class="text-red-500 text-sm mt-2">
                         {{ errors.content[0] }}
                     </p>
                 </div>
@@ -161,7 +161,7 @@ export default {
                            class="hidden">
                     <a href="#" @click.prevent="selectFile()"
                        class="flex w-full justify-center bg-gradient-to-r from-sky-400 via-sky-500 to-sky-600 text-white rounded-md hover:bg-gradient-to-bl px-3 py-1.5 focus:ring-2 focus:outline-none focus:ring-sky-500 text-sm/6 font-semibold shadow-xs focus-visible:outline-2">Image</a>
-                    <p v-if="errors.image" class="text-red-500">
+                    <p v-if="errors.image" class="text-red-500 text-sm mt-2">
                         {{ errors.image[0] }}
                     </p>
                     <div v-if="image" class="mt-2">
