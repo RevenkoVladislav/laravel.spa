@@ -5,6 +5,29 @@ export default {
     props: [
         'comments'
     ],
+
+    methods: {
+        /**
+         * Метод для скролинга в комментариях
+         * Цепляем через DOM id родительского комментария
+         * Плавно скролим в центр комментария
+         * Выделяем объект скролла рамкой
+         * Через 2 секунды снимаем выделение
+         */
+        scrollToComment(parentId) {
+            const element = document.getElementById(`comment-${parentId}`);
+
+            if (element) {
+                element.scrollIntoView({behavior: "smooth", block: "center" });
+
+                element.classList.add('ring-2', 'ring-indigo-500');
+
+                setTimeout(() => {
+                    element.classList.remove('ring-2', 'ring-indigo-500');
+                }, 2000);
+            }
+        },
+    }
 }
 
 
@@ -15,7 +38,7 @@ export default {
 
         <h3 class="text-lg font-semibold text-gray-800 mb-4">Comments ({{ comments.length }})</h3>
 
-        <div v-for="comment in comments" :key="comment.id"
+        <div v-for="comment in comments" :key="comment.id" :id="'comment-' + comment.id"
              class="flex space-x-3 bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200 hover:border-gray-400 hover:bg-indigo-50">
             <!-- Имитация аватарки -->
             <div class="flex-shrink-0">
@@ -35,6 +58,7 @@ export default {
 
                 <!-- Тело комментария вместе с родительским комментарием -->
                 <div v-if="comment.parent_id"
+                     @click="scrollToComment(comment.parent_id)"
                     class="mt-2 mb-2 p-2 bg-white/50 border-l-2 border-indigo-300 rounded text-xs cursor-pointer hover:bg-indigo-100 transition-colors">
                     <span class="inline-flex items-center font-bold text-indigo-600 mb-0.5">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-2 w-3 mr-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
