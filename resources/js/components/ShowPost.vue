@@ -23,7 +23,7 @@ export default {
             errors: {},
             body: '',
             comments: [],
-            parentId: null,
+            comment: null,
         }
     },
 
@@ -122,6 +122,7 @@ export default {
 
         /**
          * Метод по созданию коммента.
+         * Формируе commentId если мы отвечаем пользователю на комментарий либо null
          * Отправляем api запрос с body и id родительского комментария (если есть)
          *
          * Цепляем актуальный счетчик и пропихиваем новый коммент в массив
@@ -129,12 +130,14 @@ export default {
          * Ловим ошибки чтобы их выводить
          */
         storeComment(post) {
+            const commentId = this.comment ? this.comment.id : null;
+
             axios.post(`/api/posts/${post.id}/comment`, {
                 body: this.body,
-                parent_id: this.parentId,
+                parent_id: commentId,
             })
                 .then(response => {
-                    this.parentId = null;
+                    this.comment = null;
                     this.body = '';
                     post.comments_count = response.data.comments_count;
                     this.comments.unshift(response.data.comment)
@@ -144,8 +147,11 @@ export default {
                 });
         },
 
-        handleAnswer(comment) {
-            console.log(comment);
+        /**
+         * Ловим событие ответа на комментарий.
+         */
+        handleAnswerComment(comment) {
+            this.comment = comment;
         },
 
         /**
@@ -188,7 +194,7 @@ export default {
             </div>
 
             <!-- Вывод контента с кнопкой ReadMore -->
-            <div v-if="post.reposted_post" class="border-l-4 border-indigo-200 ml-4 pl-4 expandable-content">
+            <div v-if="post.reposted_post" class="border-l-4 border-indigo-300 ml-4 pl-4 expandable-content hover:border-indigo-400">
                 <expandable-content :content="post.reposted_post.content" :limit="200" />
             </div>
             <!-- Конец вывода контента с кнопкой ReadMore -->
@@ -267,6 +273,23 @@ export default {
 
         <!-- Блок с комментариями -->
         <div v-if="is_comment" class="mt-4">
+
+            <!-- Ответ на комментарий -->
+            <div v-if="comment" class="flex items-center justify-between bg-gray-50 border-l-4 border-indigo-400 hover:bg-indigo-50 hover:border-indigo-500 p-3 mb-2 rounded-r-lg">
+                <div class="flex items-center">
+                    <p class="text-sm text-gray-700">
+                        Replying to <span class="font-bold text-indigo-600">{{ comment.user.name }}</span>
+                    </p>
+                </div>
+
+                <button
+                    @click="comment = null"
+                    class="text-xs font-semibold text-gray-500 hover:text-red-500 uppercase cursor-pointer">
+                    Cancel
+                </button>
+            </div>
+            <!-- Конец ответа на комментарий -->
+
             <input v-model="body" @input="errors.body = null" type="text"
                    placeholder="Enter your comment"
                    class="block w-full rounded-md bg-gray-50 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"/>
@@ -278,7 +301,7 @@ export default {
             </button>
 
             <!-- Вывод всех комментариев для поста -->
-            <Comment :comments="this.comments" @answer="handleAnswer"></Comment>
+            <Comment :comments="this.comments" @answer="handleAnswerComment"></Comment>
             <!-- Конец вывода всех комментариев для поста -->
 
         </div>
