@@ -31,7 +31,15 @@ export default {
                     </h4>
                     <span class="text-xs text-gray-500">{{ comment.date }}</span>
                 </div>
+
                 <p class="text-sm text-gray-700 mt-1 leading-relaxed">
+                    <span v-if="comment.reply_for_user"
+                          class="inline-flex items-center font-semibold text-indigo-600 mr-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                    </svg>
+                {{ comment.reply_for_user }},
+                    </span>
                     {{ comment.body }}
                 </p>
 

@@ -126,10 +126,16 @@ class PostController extends Controller
 
     /**
      * Метод для получения всех комментариев для конкретного поста
+     * Формируем комментарии вместе с отношением пользователей и родительских комментариев
+     * Сортируем по дате
+     * Отдаем в виде CommentResource
      */
     public function getComments(Post $post)
     {
-        $comments = $post->comments()->with('user')->latest()->get();
+        $comments = $post->comments()
+            ->with(['user', 'parent'])
+            ->latest()
+            ->get();
 
         return CommentResource::collection($comments);
     }
