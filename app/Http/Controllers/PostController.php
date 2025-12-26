@@ -133,7 +133,7 @@ class PostController extends Controller
     public function getComments(Post $post)
     {
         $comments = $post->comments()
-            ->with(['user', 'parent'])
+            ->with(['user', 'parent.user'])
             ->latest()
             ->get();
 
