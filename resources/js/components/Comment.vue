@@ -15,7 +15,8 @@ export default {
 
         <h3 class="text-lg font-semibold text-gray-800 mb-4">Comments ({{ comments.length }})</h3>
 
-        <div v-for="comment in comments" :key="comment.id" class="flex space-x-3 bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200 hover:border-gray-400 hover:bg-indigo-50">
+        <div v-for="comment in comments" :key="comment.id"
+             class="flex space-x-3 bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200 hover:border-gray-400 hover:bg-indigo-50">
             <!-- Имитация аватарки -->
             <div class="flex-shrink-0">
                 <div class="h-10 w-10 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold uppercase">
@@ -32,16 +33,21 @@ export default {
                     <span class="text-xs text-gray-500">{{ comment.date }}</span>
                 </div>
 
-                <p class="text-sm text-gray-700 mt-1 leading-relaxed">
-                    <span v-if="comment.reply_for_user"
-                          class="inline-flex items-center font-semibold text-indigo-600 mr-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-                    </svg>
-                {{ comment.reply_for_user }},
-                    </span>
+                <!-- Тело комментария вместе с родительским комментарием -->
+                <div v-if="comment.parent_id"
+                    class="mt-2 mb-2 p-2 bg-white/50 border-l-2 border-indigo-300 rounded text-xs cursor-pointer hover:bg-indigo-100 transition-colors">
+                    <span class="inline-flex items-center font-bold text-indigo-600 mb-0.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-2 w-3 mr-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                        </svg>
+                        {{ comment.reply_for_user }}</span>
+                    <p class="text-gray-500 italic truncate">{{ comment.parent_body }}</p>
+                </div>
+
+                <p class="text-sm text-gray-700 mt-1">
                     {{ comment.body }}
                 </p>
+                <!-- Конец тела комментария -->
 
                 <!-- Кнопки для ответа и лайка -->
                 <div class="mt-2 flex items-center space-x-4">
