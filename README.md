@@ -30,6 +30,11 @@ php artisan schedule:work
 - Cookie sanctum auth
 - Ability to create posts with images.
 - Console command for manual storage cleanup and automated hourly scheduling.
+- Likes, Repost and comments system.
+- Following System: Mechanism for subscribing to other users.
+- Feed displaying posts from subscriptions.
+- Ability to view a list of liked posts.
+- System for comment replies with animated scroll to the parent comment.
 
 ```
 php artisan images:clear-unused
@@ -72,3 +77,32 @@ php artisan schedule:work
 </div>
 
 ---
+
+<div><p>Followed users</p>
+<img width="509" height="687" alt="подписки" src="https://github.com/user-attachments/assets/697f41c3-3282-4e7c-b756-fcaaeb3082fc" />
+</div>
+
+---
+
+<div><p>Feed Posts</p>
+<img width="569" height="756" alt="посты подписчиков" src="https://github.com/user-attachments/assets/83f2be5a-b9b2-4c11-aea0-adcb337d3f39" />
+</div>
+
+---
+
+<div><p>Liked Posts</p>
+<img width="619" height="790" alt="лайкнутые посты" src="https://github.com/user-attachments/assets/cc9518c6-a1c8-483b-899a-0c978751d5e5" />
+</div>
+
+---
+
+<div><p>Comments</p>
+<img width="625" height="885" alt="комментарии" src="https://github.com/user-attachments/assets/7c3c0622-d0ae-408f-b19a-312079a9e553" />
+</div>
+
+---
+
+<div><p>Repost</p>
+<img width="571" height="723" alt="repost" src="https://github.com/user-attachments/assets/b95f78b6-79dc-4794-b617-9f1a11cd050c" />
+</div>
+
