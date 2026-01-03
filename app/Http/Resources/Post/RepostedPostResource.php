@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Post;
 
+use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,6 +20,8 @@ class RepostedPostResource extends JsonResource
             'title' => $this->title,
             'content' => $this->content,
             'image_url' => $this->image?->url, //защита от null error т.к пост может быть без картинки
+            'user' => new UserResource($this->user),
+            'date' => $this->date,
         ];
     }
 }

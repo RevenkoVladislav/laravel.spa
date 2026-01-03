@@ -200,6 +200,18 @@ export default {
         <!-- Вывод данных из репоста -->
         <div v-if="post.reposted_post" class="bg-gray-200 p-4 my-4 border border-gray-300 hover:border-gray-400 hover:bg-indigo-100 rounded-md">
             <h1 class="text-2xl text-center font-bold text-gray-900 mb-4 tracking-tight leading-8">{{ post.reposted_post.title }}</h1>
+
+            <div class="flex items-center text-sm p-4 mb-2">
+                <span class="text-gray-500 mr-1.5">Original by</span>
+                <router-link
+                    :to="{name: 'user.show', params: {id: post.reposted_post.user.id}}"
+                    class="font-bold text-indigo-600 hover:text-indigo-800"
+                >
+                    {{ post.reposted_post.user.name }}
+                </router-link>
+                <span class="text-gray-400 ml-auto italic">{{ post.reposted_post.date }}</span>
+            </div>
+
             <div v-if="post.reposted_post.image_url" class="mb-6 rounded-md">
                 <img v-if="post.reposted_post.image_url" :src="post.reposted_post.image_url" :alt="post.reposted_post.title"
                      class="w-full mx-auto border hover:border-blue-500">
