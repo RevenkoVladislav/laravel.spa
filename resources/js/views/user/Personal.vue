@@ -109,9 +109,8 @@ export default {
          * На персональной странице передаем параметр id = null, чтобы получить статистику по текущему пользователю.
          */
         getStats() {
-            axios.post('/api/users/stats', {id: null})
+            axios.post('/api/users/stats', {user_id: null})
                 .then(response => {
-                    console.log(response.data.data);
                     this.stats = response.data.data;
                 });
         },
@@ -126,7 +125,7 @@ export default {
 
 <template>
     <div class="mt-6 sm:mx-auto sm:w-full sm:max-w-lg space-y-6">
-        <Statistics></Statistics>
+        <Statistics :stats="stats"></Statistics>
     </div>
 
 
