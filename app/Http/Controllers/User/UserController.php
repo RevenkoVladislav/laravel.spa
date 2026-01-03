@@ -113,7 +113,8 @@ class UserController extends Controller
 
     /**
      * Метод для получения статистики для пользователя
-     * Формируем userId из request если есть или берем id авторизованного пользователя
+     * Формируем userId из request берем значение user_id если он не пустое и не null
+     * иначе берем данные по авторизованному пользователю
      * Обращаемся к userService и получаем массив со статистикой
      * Возвращаем сформированные данные
      */
@@ -121,7 +122,9 @@ class UserController extends Controller
     {
         $data = $request->validated();
 
-        $userId = $data['user_id'] ?? auth()->id();
+        $userId = $request->filled('user_id')
+            ? $request->input('user_id')
+            : auth()->id();
 
         $stats = $this->userService->getStatistics($userId);
 

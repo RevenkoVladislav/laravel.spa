@@ -13,7 +13,12 @@ export default {
         return {
             posts: [],
             userId: this.$route.params.id,
-            stats: [],
+            stats: {
+                subscribers_count: 0,
+                followings_count: 0,
+                likes_count: 0,
+                posts_count: 0,
+            },
         }
     },
 
@@ -38,7 +43,7 @@ export default {
          * На персональной странице передаем параметр id = null, чтобы получить статистику по текущему пользователю.
          */
         getStats() {
-            axios.post('/api/users/stats', {user_id: this.userId})
+            axios.get('/api/users/stats', {user_id: this.userId})
                 .then(response => {
                     this.stats = response.data.data;
                 });
