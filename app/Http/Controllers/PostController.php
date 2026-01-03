@@ -33,7 +33,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with(['image', 'repostedPost'])
+        $posts = Post::with(['image', 'repostedPost', 'user'])
             ->withCount(['likedUsers', 'repostedByPosts', 'comments'])
             ->where('user_id', auth()->id())
             ->orderBy('created_at', 'desc')

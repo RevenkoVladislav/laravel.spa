@@ -169,9 +169,21 @@ export default {
 </script>
 
 <template>
-    <!-- Вывод поста - заголовок, картинка, контент -->
+    <!-- Вывод поста - заголовок, автор, картинка, контент -->
     <div class="p-6">
         <h1 class="text-2xl text-center font-bold text-gray-900 mb-4 tracking-tight leading-8">{{ post.title }}</h1>
+
+            <div class="flex items-center space-x-2 text-sm mt-2 mb-2">
+                <span class="text-gray-500">Published by</span>
+                <router-link
+                    :to="{name: 'user.show', params: {id: post.user.id}}"
+                    class="font-bold text-indigo-600 hover:text-indigo-800"
+                >
+                    {{ post.user.name }}
+                </router-link>
+                <span class="text-gray-500 ml-auto italic">{{ post.date }}</span>
+            </div>
+
         <div v-if="post.image_url" class="mb-6 rounded-md">
             <img v-if="post.image_url" :src="post.image_url" :alt="post.title"
                  class="w-full mx-auto border hover:border-blue-500">
@@ -229,7 +241,6 @@ export default {
                 </svg>
                 <p class="font-bold text-xl">{{ post.reposted_count }}</p>
             </div>
-            <p class="text-right text-sm text-slate-500">{{ post.date }}</p>
         </div>
         <!-- Конец блока с иконками -->
 

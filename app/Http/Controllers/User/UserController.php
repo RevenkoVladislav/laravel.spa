@@ -40,7 +40,7 @@ class UserController extends Controller
     public function show(User $user)
     {
         $posts = $user->posts()
-            ->with(['image', 'repostedPost'])
+            ->with(['image', 'repostedPost', 'user'])
             ->withCount(['likedUsers', 'repostedByPosts', 'comments'])
             ->latest()
             ->get();
@@ -79,7 +79,7 @@ class UserController extends Controller
             ->pluck('post_id')
             ->toArray();
 
-        $posts = Post::with(['image', 'repostedPost'])
+        $posts = Post::with(['image', 'repostedPost', 'user'])
             ->withCount(['likedUsers', 'repostedByPosts', 'comments'])
             ->whereIn('user_id', $followingIds)
             ->whereNotIn('id', $likedPostIds)
@@ -100,7 +100,7 @@ class UserController extends Controller
     {
         $posts = auth()->user()
             ->likedPosts()
-            ->with(['image', 'repostedPost'])
+            ->with(['image', 'repostedPost', 'user'])
             ->withCount(['likedUsers', 'repostedByPosts', 'comments'])
             ->latest()
             ->get();
