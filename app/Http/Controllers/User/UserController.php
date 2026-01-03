@@ -114,12 +114,7 @@ class UserController extends Controller
     /**
      * Метод для получения статистики для пользователя
      * Формируем userId из request если есть или берем id авторизованного пользователя
-     * Формируем массив
-     * Берем количество постов где люди подписаны на меня
-     * Берем количество постов где подписан конкретный пользователь
-     * Берем id постов которые создал данный пользователь, и считаем сколько у них лайков
-     * Считаем количество постов созданных юзером
-     *
+     * Обращаемся к userService и получаем массив со статистикой
      * Возвращаем сформированные данные
      */
     public function getStats(StatsRequest $request)
@@ -128,13 +123,7 @@ class UserController extends Controller
 
         $userId = $data['user_id'] ?? auth()->id();
 
-        $stats = [];
-        $stats['subscribers_count'] = SubscriberFollowing::where('following_id', $userId)->count();
-        $stats['followers_count'] = SubscriberFollowing::where('subscriber_id', $userId)->count();
-
-        $postIds = Post::where('user_id', $userId)->pluck('id')->toArray();
-        $stats['likes_count'] = LikedPost::whereIn('post_id', $postIds)->count();
-        $stats['posts_count'] = count($postIds);
+        $stats = $this->userService->getStatistics($userId);
 
         return response()->json(['data' => $stats]);
     }
