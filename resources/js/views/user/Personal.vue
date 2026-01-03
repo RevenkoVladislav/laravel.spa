@@ -1,5 +1,6 @@
 <script>
 import Post from '../../components/Post.vue';
+import Statistics from '../../components/Statistics.vue';
 
 export default {
     name: "Personal",
@@ -12,11 +13,13 @@ export default {
             errors: {},
             posts: [],
             isFormVisible: false,
+            stats: [],
         }
     },
 
     components: {
         Post,
+        Statistics,
     },
 
     methods: {
@@ -100,15 +103,33 @@ export default {
                     this.posts = response.data.data;
                 })
         },
+
+        /**
+         * Метод для получения статистических данных
+         * На персональной странице передаем параметр id = null, чтобы получить статистику по текущему пользователю.
+         */
+        getStats() {
+            axios.post('/api/users/stats', {id: null})
+                .then(response => {
+                    console.log(response.data.data);
+                    this.stats = response.data.data;
+                });
+        },
     },
 
     mounted() {
         this.getPosts();
+        this.getStats();
     }
 }
 </script>
 
 <template>
+    <div class="mt-6 sm:mx-auto sm:w-full sm:max-w-lg space-y-6">
+        <Statistics></Statistics>
+    </div>
+
+
     <div v-if="!isFormVisible" class="flex justify-center mt-6">
         <button @click="isFormVisible = true"
                 class="bg-indigo-500 text-white px-6 py-2 rounded-md font-semibold hover:bg-indigo-700 transition">
